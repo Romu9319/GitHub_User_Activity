@@ -20,5 +20,3 @@ def get_issues(user, repo_name):
     if response.status_code == 200:
         data = response.json()
         return data
-    else:
-        raise Exception(f"Error {response.status_code}: {response.text}")

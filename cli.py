@@ -7,7 +7,7 @@ def cli():
 
 @cli.command()
 @click.argument('user', required=True)
-def github_activity(user):
+def pushevent_activity(user):
     events = get_events(user)
     push_count = 0
     previous_repository = None
@@ -25,18 +25,25 @@ def github_activity(user):
     
     if previous_repository:
         click.echo(f"Pushed {push_count} commits to {previous_repository}")
-                
-                
 
 
+@cli.command()
+@click.argument('user', required=True)
+def github_activity(user):
+    events = get_events(user)
+    event_counts = {}
+
+    for event in events:
+        event_type = event['type']
+        if event_type in event_counts:
+            event_counts[event_type] += 1 
+        else:
+            event_counts[event_type] = 1 
+    
+    for event_type, count in event_counts.items():
+        click.echo(f"{count} {event_type} type repositorys")
 
 
-
-         
-    #### NOTA CONTAR LAS EVENTOS DE TIPO IssueCommentEvent Y EL NOMBRE DE USUARIO Y REPO (TYPE['REPO']['NAME'])
-    #issues = get_issues(user)
-    #click.echo(f"Pushed {push_count} commits to {event['repo']['name']}")
-    #click.echo(f"{event['type']}")
 
 if __name__ == "__main__":
     cli()

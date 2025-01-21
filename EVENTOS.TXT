@@ -1,0 +1,16 @@
+if event['type] == 'IssueCommentEvent':
+    rich_print(f"- :smiley: commented on issue {event['payload']['issue']['number']}")
+elif event['type'] == 'PushEvent':
+    rich_print(f"- :smiley: pushed to {event['repo']['name']}")
+elif event['type'] == 'IssuesEvent':
+    rich_print(f"- :smiley: created issue {event['payload']['issue']['number']}")
+elif event['type'] == 'WatchEvent':
+    rich_print(f"- :smiley: starred {event['repo']['name']}")
+elif event['type'] == 'PullRequestEvent':
+    rich_print(f"- :smiley: created pull request {event['payload']['pull_request']['number']}")
+elif event['type'] == 'PullRequestReviewEvent':
+    rich_print(f"- :smiley: reviewed pull request {event['payload']['pull_request']['number']}")
+elif event['type'] == 'PullRequestReviewCommentEvent':
+    rich_print(f"- :smiley: commented on pull request {event['payload']['pull_request']['number']}")
+elif event['type'] == 'CreateEvent':
+    rich_print(f"- :smiley: created {event['payload']['ref_type']} {event['payload']['ref']}")

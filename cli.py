@@ -37,36 +37,26 @@ def github_activity(user):
 #Filter user events by type
 @cli.command()
 @click.argument('user', required=True)
-@click.argument('event', required=True)
-def filter(user, event):
+@click.argument('event_type', required=True)
+def filter(user, event_type):
     user_events = get_events(user)
 
-    for events in user_events:
-        if events['type'] == event:
-            
-            dt = datetime.strptime(events['created_at'], "%Y-%m-%dT%H:%M:%SZ")
-            # Extraer solo la parte de la fecha en formato año-mes-día
+    filtered_event = [event for event in user_events if event['type'] == event_type]
+    
+    if not filtered_event:
+        click.echo(f"{event_type} type event not found for user {user}")
+
+    for event in filtered_event:
+        try:
+            dt = datetime.strptime(event['created_at'], "%Y-%m-%dT%H:%M:%SZ")
             date_only = dt.date()
-            click.echo(f"Event {events['type']} created in {date_only} in {events['repo']['name']}")
+        except (ValueError, TypeError) as error:
+            click.echo(f"Error in date format:\n {error}")
+            continue
 
+        click.echo(f"Event {event['type']} created in {date_only} in {event['repo']['name']}")
 
-
+### AÑADIR EL CONTROL DE EXECPCIONES AL RESTO DE COMANDOS E INTENTAR HACER QUE EL COMANDO FILTER 
+# ####MUESTRE SOLAMENTE LOS ULTIMOS 10 EVENTOS 
 if __name__ == "__main__":
     cli()
-
-
-
-      # UTILIZAR ESTE CÓDIGO PARA CREAR EL COMANDO PARA FILTRAR POR EVENTOS
-   # for event in events:
-   #     if event['type'] == "PushEvent":
-   #         repository = event['repo']['name']
-   #         if repository == previous_repository:
-   #             push_count +=1
-   #         else:
-   #             if previous_repository:
-   #                 click.echo(f"Pushed {push_count} commits to {previous_repository}")
-   #             push_count = 1
-   #             previous_repository = repository
-   # 
-   # if previous_repository:
-   #     click.echo(f"Pushed {push_count} commits to {previous_repository}")

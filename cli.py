@@ -47,7 +47,7 @@ def filter(user, event):
             dt = datetime.strptime(events['created_at'], "%Y-%m-%dT%H:%M:%SZ")
             # Extraer solo la parte de la fecha en formato año-mes-día
             date_only = dt.date()
-            click.echo(f"Event {events['type']} created at {date_only} in {events['repo']['name']}")
+            click.echo(f"Event {events['type']} created in {date_only} in {events['repo']['name']}")
 
 
 

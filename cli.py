@@ -1,3 +1,4 @@
+from datetime import datetime
 import click
 from github_api import get_events, get_issues
 
@@ -32,6 +33,21 @@ def github_activity(user):
     
     for event_type, count in event_counts.items():        
         click.echo(f"{count} {event_type} type repositorys")
+
+#Filter user events by type
+@cli.command()
+@click.argument('user', required=True)
+@click.argument('event', required=True)
+def filter(user, event):
+    user_events = get_events(user)
+
+    for events in user_events:
+        if events['type'] == event:
+            
+            dt = datetime.strptime(events['created_at'], "%Y-%m-%dT%H:%M:%SZ")
+            # Extraer solo la parte de la fecha en formato año-mes-día
+            date_only = dt.date()
+            click.echo(f"Event {events['type']} created at {date_only} in {events['repo']['name']}")
 
 
 

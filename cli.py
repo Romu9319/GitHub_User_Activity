@@ -29,6 +29,9 @@ def last_events(user ):
             if count >= 3:
                 break
 
+        except Exception as e:
+            click.echo(f"Event processing error: {e}")
+
 
 @cli.command()
 @click.argument('user', required=True)

@@ -26,7 +26,7 @@ def last_events(user ):
             click.echo(f"Event {event_type} created in {repo_name}")
             count += 1
 
-            if count >= 3:
+            if count >= 5:
                 break
 
         except Exception as e:
@@ -36,7 +36,11 @@ def last_events(user ):
 @cli.command()
 @click.argument('user', required=True)
 def github_activity(user):
-    events = get_events(user)
+    try:
+        events = get_events(user)
+    except Exception as error:
+        click.echo(f"Could not connect to servers correctly : {error}")
+
     event_counts = {}
 
     for event in events:
@@ -54,9 +58,12 @@ def github_activity(user):
 @click.argument('user', required=True)
 @click.argument('event_type', required=True)
 def filter(user, event_type):
-    user_events = get_events(user)
+    try:
+        events = get_events(user)
+    except Exception as error:
+        click.echo(f"Could not connect to servers correctly : {error}")
 
-    filtered_event = [event for event in user_events if event['type'] == event_type]
+    filtered_event = [event for event in events if event['type'] == event_type]
     
     if not filtered_event:
         click.echo(f"{event_type} type event not found for user {user}")

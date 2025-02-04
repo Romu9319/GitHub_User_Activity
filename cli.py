@@ -8,14 +8,26 @@ def cli():
 
 @cli.command()
 @click.argument('user', required=True)
-def last_events(user):
-    # Show de last 3 event of de user
-    events = get_events(user)
+def last_events(user ):
+    try:
+        events = get_events(user)
+    except Exception as error:
+        click.echo(f"Could not connect to servers correctly : {error}")
 
-    for event in events[:3]:
-        click.echo(f"Event {event['type']} created in {event['repo']['name']}")
-    else:
-        click.echo(f"Not activity finde for user {user}")
+    if not events:
+        click.echo(f"Events not found for user: {user}")
+
+    count = 0
+    for event in events:
+        try:
+            event_type = event.get('type', 'Event type not found')
+            event_repo = event.get('repo', 'Repository not found')
+            repo_name = event_repo.get('name', 'Repository name not found')
+            click.echo(f"Event {event_type} created in {repo_name}")
+            count += 1
+
+            if count >= 3:
+                break
 
 
 @cli.command()

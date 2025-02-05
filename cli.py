@@ -1,6 +1,6 @@
 from datetime import datetime
 import click
-from github_api import get_events, get_issues
+from github_api import get_events
 
 @click.group()
 def cli():

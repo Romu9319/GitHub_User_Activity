@@ -8,11 +8,13 @@ def cli():
 
 @cli.command()
 @click.argument('user', required=True)
-def last_events(user ):
+def last_events(user):
+    """Shows the last 5 events made by the user"""
     try:
         events = get_events(user)
     except Exception as error:
         click.echo(f"Could not connect to servers correctly : {error}")
+        return
 
     if not events:
         click.echo(f"Events not found for user: {user}")
@@ -29,35 +31,42 @@ def last_events(user ):
             if count >= 5:
                 break
 
-        except Exception as e:
-            click.echo(f"Event processing error: {e}")
+        except Exception as error:
+            click.echo(f"Event processing error: {error}")
 
 
 @cli.command()
 @click.argument('user', required=True)
 def github_activity(user):
+    """Shows the types of events performed and the times performed by the user"""
     try:
         events = get_events(user)
     except Exception as error:
         click.echo(f"Could not connect to servers correctly : {error}")
+        return
 
     event_counts = {}
-
     for event in events:
-        event_type = event['type']
-        if event_type in event_counts:
-            event_counts[event_type] += 1 
-        else:
-            event_counts[event_type] = 1 
+        try:
+            event_type = event.get('type','Event type not found')
+
+            if event_type in event_counts:
+                event_counts[event_type] += 1 
+            else:
+                event_counts[event_type] = 1 
+        
+        except Exception as error:
+            click.echo(f"Event processing error: {error}")        
     
     for event_type, count in event_counts.items():        
-        click.echo(f"{count} {event_type} type repositorys")
+        click.echo(f"{count} {event_type} events")
 
-#Filter user events by type
+
 @cli.command()
 @click.argument('user', required=True)
 @click.argument('event_type', required=True)
 def filter(user, event_type):
+    """Filter the search by event type and show the last 10 events """
     try:
         events = get_events(user)
     except Exception as error:
@@ -80,5 +89,5 @@ def filter(user, event_type):
 
 ### AÑADIR EL CONTROL DE EXECPCIONES AL RESTO DE COMANDOS E INTENTAR HACER QUE EL COMANDO FILTER 
 # ####MUESTRE SOLAMENTE LOS ULTIMOS 10 EVENTOS 
-if __name__ == "__main__":
+if __name__ == '__main__':
     cli()

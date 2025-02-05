@@ -71,13 +71,14 @@ def filter(user, event_type):
         events = get_events(user)
     except Exception as error:
         click.echo(f"Could not connect to servers correctly : {error}")
+        return
 
     filtered_event = [event for event in events if event['type'] == event_type]
     
     if not filtered_event:
         click.echo(f"{event_type} type event not found for user {user}")
 
-    for event in filtered_event:
+    for event in filtered_event[:10]:
         try:
             dt = datetime.strptime(event['created_at'], "%Y-%m-%dT%H:%M:%SZ")
             date_only = dt.date()
@@ -87,7 +88,6 @@ def filter(user, event_type):
 
         click.echo(f"Event {event['type']} created in {date_only} in {event['repo']['name']}")
 
-### AÑADIR EL CONTROL DE EXECPCIONES AL RESTO DE COMANDOS E INTENTAR HACER QUE EL COMANDO FILTER 
-# ####MUESTRE SOLAMENTE LOS ULTIMOS 10 EVENTOS 
+
 if __name__ == '__main__':
     cli()

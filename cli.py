@@ -38,7 +38,7 @@ def last_events(user):
 @cli.command()
 @click.argument('user', required=True)
 def github_activity(user):
-    """Shows the types of events performed and the times performed by the user"""
+    """Shows the number of events by type"""
     try:
         events = get_events(user)
     except Exception as error:
